@@ -13,14 +13,27 @@ enum Token {
 static std::string IdentifierStr;
 static double NumVal;
 
+static int CurrentRow = 0;
+static int CurrentCol = 0;
+
+static int getchar_rec() {
+  CurrentCol++;
+  int t = getchar();
+  if (t == '\n') {
+    CurrentRow += 1;
+    CurrentCol = 0;
+  }
+  return t;
+}
+
 static int gettok() {
   static int LastChar = ' ';
   while (isspace(LastChar))
-      LastChar = getchar();
+      LastChar = getchar_rec();
 
   if (isalpha(LastChar)) {
     IdentifierStr = LastChar;
-    while (isalnum((LastChar = getchar())))
+    while (isalnum((LastChar = getchar_rec())))
         IdentifierStr += LastChar;
     if (IdentifierStr == "def") return tok_def;
     if (IdentifierStr == "extern") return tok_extern;
@@ -31,7 +44,7 @@ static int gettok() {
     std::string NumStr;
     do {
       NumStr += LastChar;
-      LastChar = getchar();
+      LastChar = getchar_rec();
     } while (isdigit(LastChar) || LastChar == '.');
 
     NumVal = strtod(NumStr.c_str(), 0);
@@ -40,7 +53,7 @@ static int gettok() {
 
   if (LastChar == '#') {
     do {
-        LastChar = getchar();
+        LastChar = getchar_rec();
     } while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
 
     if (LastChar != EOF)
@@ -51,7 +64,7 @@ static int gettok() {
       return tok_eof;
 
   int ThisChar = LastChar;
-  LastChar = getchar();
+  LastChar = getchar_rec();
   return ThisChar;
 }
 
