@@ -1,7 +1,7 @@
 all: toy
 
 toy:
-	g++ -Wall parser.cpp -o toy
+	g++ -g -03 -Wall parser.cpp -o toy
 
 clean:
 	rm -rf *.o toy

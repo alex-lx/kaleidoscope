@@ -38,7 +38,8 @@ class PrototypeAST {
   std::string Name;
   std::vector<std::string> Args;
 public:
-  PrototypeAST(const std::string &name, const std::vector<std::string> &args)
+  PrototypeAST(const std::string &name = "",
+                const std::vector<std::string> &args = std::vector<std::string>())
       : Name(name), Args(args) {}
 
 };
