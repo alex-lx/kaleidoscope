@@ -163,24 +163,33 @@ static FunctionAST *ParseTopLevelExpr() {
 }
 
 static void HandleDefinition() {
-  if (ParseDefinition()) {
-    fprintf(stderr, "Parsed a function definition.\n");
+  if (FunctionAST *F = ParseDefinition()) {
+    if (Function *LF = F->Codegen()) {
+      fprintf(stderr, "Parsed a function definition.\n");
+      LF->dump();
+    }
   } else {
     getNextToken();
   }
 }
 
 static void HandleExtern() {
-  if (ParseExtern()) {
-    fprintf(stderr, "Parsed an extern\n");
+  if (PrototypeAST *P = ParseExtern()) {
+    if (Function *F = P->Codegen()) {
+      fprintf(stderr, "Parsed an extern\n");
+      F->dump();
+    }
   } else {
     getNextToken();
   }
 }
 
 static void HandleTopLevelExpression() {
-  if (ParseTopLevelExpr()) {
-    fprintf(stderr, "Parsed a top-level expr\n");
+  if (FunctionAST *F = ParseTopLevelExpr()) {
+    if (Function *LF = F->Codegen()) {
+      fprintf(stderr, "Parsed a top-level expr\n");
+      LF->dump();
+    }
   } else {
     fprintf(stderr, "error?");
     getNextToken();
@@ -210,5 +219,7 @@ int main() {
   BinOpPrecedence['*'] = 40;
 
   MainLoop();
+
+  TheModule->dump();
   return 0;
 }
