@@ -197,9 +197,6 @@ static void HandleTopLevelExpression() {
 }
 
 static void MainLoop() {
-  fprintf(stderr, "ready> ");
-  getNextToken();
-
   while (1) {
     fprintf(stderr, "ready> ");
     switch (CurTok) {
@@ -213,10 +210,17 @@ static void MainLoop() {
 }
 
 int main() {
+  LLVMContext &Context = getGlobalContext();
+
   BinOpPrecedence['<'] = 10;
   BinOpPrecedence['+'] = 20;
   BinOpPrecedence['-'] = 20;
   BinOpPrecedence['*'] = 40;
+
+  fprintf(stderr, "ready> ");
+  getNextToken();
+
+  TheModule = new Module("my cool jit", Context);
 
   MainLoop();
 
